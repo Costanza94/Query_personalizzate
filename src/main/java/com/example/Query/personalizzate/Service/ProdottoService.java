@@ -45,7 +45,7 @@ public class ProdottoService {
             prodottoEntityOptional.get().setCategoriaEnum(prodotto.getCategoriaEnum());
             prodottoEntityOptional.get().setQuantitaDisponibile(prodotto.getQuantitaDisponibile());
             ProdottoEntity prodottoAggiornato = prodottoRepository.save(prodotto);
-            return Optional.of(prodotto);
+            return Optional.of(prodottoAggiornato);
         }
         return Optional.empty();
     }
@@ -65,19 +65,25 @@ public class ProdottoService {
         prodottoRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
     //Find by category
-    public Optional<List<ProdottoEntity>>findByCategory(ProdottoEntity prodotto){
-       List<ProdottoEntity> prodottoEntityOptional = prodottoRepository.findByCategoriaEnum(CategoriaEnum.VESTITI);
-       return Optional.ofNullable(prodottoEntityOptional);
+    public Optional<List<ProdottoEntity>> findByCategory(ProdottoEntity prodotto) {
+        List<ProdottoEntity> prodottoEntityOptional = prodottoRepository.findByCategoriaEnum(CategoriaEnum.VESTITI);
+        return Optional.ofNullable(prodottoEntityOptional);
     }
+
     //Find by name
-    public List<ProdottoEntity> findByName(String nome){
+    public List<ProdottoEntity> findByName(String nome) {
         return prodottoRepository.findByNomeContaining(nome);
     }
+
     // Find by prezzo
-    public List<ProdottoEntity> findByPrice(Double prezzo){
+    public List<ProdottoEntity> findByPrice(Double prezzo) {
         return prodottoRepository.findByPrezzoLessThan(prezzo);
     }
 
-
+    //Desc Order
+    public List<ProdottoEntity> findByPriceDesc(Double prezzo) {
+        return prodottoRepository.findByPrezzoOrderByPrezzoDesc(prezzo);
+    }
 }
