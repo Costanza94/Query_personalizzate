@@ -1,6 +1,7 @@
 package com.example.Query.personalizzate.Entity;
 
 import com.example.Query.personalizzate.Enumerated.CategoriaEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -22,20 +23,26 @@ public class ProdottoEntity {
     private CategoriaEnum categoriaEnum;
     @Column(name = "quantità_disponibile")
     private Integer quantitaDisponibile;
+
+    //per non passare la data nel json perchè andiamo a settarla nel costruttore
+    //siccome è la data di creazione dell'oggetto la settiamo con la data corrente direttamente
+    // così non la passiamo tramite il json
+    //(ovviamente non vale per tutte le date ma solo quando  creaiamo)
+    @JsonIgnore
     @Column(name = "data_creazione")
-    private LocalDate dataCreazione;
+    private LocalDate dataCreazione = LocalDate.now();
 
 
     private ProdottoEntity (){}
 
-    public ProdottoEntity(LocalDate dataCreazione, CategoriaEnum categoriaEnum, Double prezzo, String nome, Integer id, String descrizione, Integer quantitaDisponibile) {
-        this.dataCreazione = dataCreazione;
-        this.categoriaEnum = categoriaEnum;
-        this.prezzo = prezzo;
-        this.nome = nome;
+    public ProdottoEntity(Integer id, String nome, String descrizione, Double prezzo, CategoriaEnum categoriaEnum, Integer quantitaDisponibile) {
         this.id = id;
+        this.nome = nome;
         this.descrizione = descrizione;
+        this.prezzo = prezzo;
+        this.categoriaEnum = categoriaEnum;
         this.quantitaDisponibile = quantitaDisponibile;
+
     }
 
     public LocalDate getDataCreazione() {

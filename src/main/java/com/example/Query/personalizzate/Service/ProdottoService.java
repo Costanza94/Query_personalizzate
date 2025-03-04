@@ -26,7 +26,7 @@ public class ProdottoService {
     }
 
     //find by id
-    public ResponseEntity<ProdottoEntity> updateList(Integer id) {
+    public ResponseEntity<ProdottoEntity> findById(Integer id) {
         if (prodottoRepository.existsById(id)) {
             return ResponseEntity.ok().build();
         } else {
