@@ -9,18 +9,24 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "prodotto")
 public class ProdottoEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column(name = "nome")
     private String nome;
+
     @Column(name = "descrizione")
     private String descrizione;
+
     @Column(name = "prezzo")
     private Double prezzo;
+
     @Column(name = "categoria")
     @Enumerated(EnumType.STRING)
     private CategoriaEnum categoriaEnum;
+
     @Column(name = "quantità_disponibile")
     private Integer quantitaDisponibile;
 
@@ -32,7 +38,7 @@ public class ProdottoEntity {
     @Column(name = "data_creazione")
     private LocalDate dataCreazione = LocalDate.now();
 
-
+    //Il costruttore vuoto va sempre messo perchè spring lo vuole come specifica
     private ProdottoEntity (){}
 
     public ProdottoEntity(Integer id, String nome, String descrizione, Double prezzo, CategoriaEnum categoriaEnum, Integer quantitaDisponibile) {

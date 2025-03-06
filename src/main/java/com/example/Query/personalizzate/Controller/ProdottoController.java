@@ -19,7 +19,7 @@ public class ProdottoController {
     @PostMapping("/crea")
     public ResponseEntity<ProdottoEntity> creaProdotto(@RequestBody ProdottoEntity prodotto) {
         ProdottoEntity prodotto1 = prodottoService.creaProdotto(prodotto);
-        return ResponseEntity.ok(prodotto1);
+        return ResponseEntity.ok(prodotto1); //nel controller utilizziamo sempre Response Entity e mai Optional
     }
 
     @GetMapping("/select-all")
@@ -29,7 +29,11 @@ public class ProdottoController {
 
     @GetMapping("/trova-per/{id}")
     public ResponseEntity<ProdottoEntity> trovaPerId(@PathVariable Integer id) {
-        return prodottoService.findById(id);
+        Optional<ProdottoEntity> prodottoFindById = prodottoService.findById(id);
+        if (prodottoFindById.isPresent()) {
+            return ResponseEntity.ok(prodottoFindById.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/update-prodotto/{id}")
@@ -41,14 +45,12 @@ public class ProdottoController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delete-all-products")
-    public ResponseEntity<List<ProdottoEntity>> cancellaTutto() {
-        return ResponseEntity.ok(prodottoService.deleteAll());
-    }
+
 
     @DeleteMapping("/delete-product/{id}")
     public ResponseEntity<ProdottoEntity> cancellaPerId(@PathVariable Integer id){
-        return prodottoService.deleteById(id);
+        prodottoService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/find-by-category")

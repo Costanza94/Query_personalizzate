@@ -13,11 +13,12 @@ import java.util.Optional;
 @Service
 public class ProdottoService {
     @Autowired
-    ProdottoRepository prodottoRepository;
+    private ProdottoRepository prodottoRepository;
 
-    //Crate
+    //Create nuovo prodotto
     public ProdottoEntity creaProdotto(ProdottoEntity prodotto) {
-        return prodottoRepository.save(prodotto);
+        ProdottoEntity prodottoSaved = prodottoRepository.save(prodotto);
+        return prodottoSaved;
     }
 
     //read all product
@@ -26,44 +27,34 @@ public class ProdottoService {
     }
 
     //find by id
-    public ResponseEntity<ProdottoEntity> findById(Integer id) {
-        if (prodottoRepository.existsById(id)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public Optional<ProdottoEntity> findById(Integer id) {
+        //devo recuperare l'elemento dall'id tramite il metodo del repository findbyid
+        Optional<ProdottoEntity> prodottoFound = prodottoRepository.findById(id);
+        if (prodottoFound.isPresent()) {
+            return prodottoFound;
         }
+        return Optional.empty(); //Nel service utilizziamo Optional e mai ResponseEntity
     }
 
     //Update product
-    public Optional<ProdottoEntity> updateProdotto(Integer id, ProdottoEntity prodotto) {
+    public Optional<ProdottoEntity> updateProdotto(Integer id, ProdottoEntity prodottoDatiDaAggiornare) {
         Optional<ProdottoEntity> prodottoEntityOptional = prodottoRepository.findById(id);
         if (prodottoEntityOptional.isPresent()) {
-            prodottoEntityOptional.get().setDescrizione(prodotto.getDescrizione());
-            prodottoEntityOptional.get().setNome(prodotto.getNome());
-            prodottoEntityOptional.get().setPrezzo(prodotto.getPrezzo());
-            prodottoEntityOptional.get().setDataCreazione(prodotto.getDataCreazione());
-            prodottoEntityOptional.get().setCategoriaEnum(prodotto.getCategoriaEnum());
-            prodottoEntityOptional.get().setQuantitaDisponibile(prodotto.getQuantitaDisponibile());
-            ProdottoEntity prodottoAggiornato = prodottoRepository.save(prodotto);
+            prodottoEntityOptional.get().setDescrizione(prodottoDatiDaAggiornare.getDescrizione());
+            prodottoEntityOptional.get().setNome(prodottoDatiDaAggiornare.getNome());
+            prodottoEntityOptional.get().setPrezzo(prodottoDatiDaAggiornare.getPrezzo());
+            prodottoEntityOptional.get().setDataCreazione(prodottoDatiDaAggiornare.getDataCreazione());
+            prodottoEntityOptional.get().setCategoriaEnum(prodottoDatiDaAggiornare.getCategoriaEnum());
+            prodottoEntityOptional.get().setQuantitaDisponibile(prodottoDatiDaAggiornare.getQuantitaDisponibile());
+            ProdottoEntity prodottoAggiornato = prodottoRepository.save(prodottoDatiDaAggiornare);
             return Optional.of(prodottoAggiornato);
         }
         return Optional.empty();
     }
 
-    //Delete all products
-    public List<ProdottoEntity> deleteAll() {
-        List<ProdottoEntity> productList = prodottoRepository.findAll();
-        prodottoRepository.deleteAll();
-        return productList;
-    }
-
     //Delete by id
-    public ResponseEntity<ProdottoEntity> deleteById(Integer id) {
-        if (!prodottoRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
+    public void deleteById(Integer id) {
         prodottoRepository.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
     //Find by category

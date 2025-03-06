@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface ProdottoRepository extends JpaRepository<ProdottoEntity, Integer> {
 
+    //queste sono custom query servono per fare le query con le where
     @Query
     List<ProdottoEntity> findByCategoriaEnum(CategoriaEnum categoriaEnum);
     @Query
