@@ -51,14 +51,14 @@ public class ProdottoService {
     }
 
     //Delete all products
-    public List<ProdottoEntity> deleteById(Integer id) {
+    public List<ProdottoEntity> deleteAll() {
         List<ProdottoEntity> productList = prodottoRepository.findAll();
         prodottoRepository.deleteAll();
         return productList;
     }
 
     //Delete by id
-    public ResponseEntity<ProdottoEntity> prodotto(Integer id) {
+    public ResponseEntity<ProdottoEntity> deleteById(Integer id) {
         if (!prodottoRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -67,9 +67,9 @@ public class ProdottoService {
     }
 
     //Find by category
-    public Optional<List<ProdottoEntity>> findByCategory(ProdottoEntity prodotto) {
+    public List<ProdottoEntity> findByCategory(CategoriaEnum categoriaEnum) {
         List<ProdottoEntity> prodottoEntityOptional = prodottoRepository.findByCategoriaEnum(CategoriaEnum.VESTITI);
-        return Optional.ofNullable(prodottoEntityOptional);
+        return prodottoEntityOptional;
     }
 
     //Find by name
@@ -77,8 +77,8 @@ public class ProdottoService {
         return prodottoRepository.findByNomeContaining(nome);
     }
 
-    // Find by prezzo
-    public List<ProdottoEntity> findByPrice(Double prezzo) {
+    // Find by prezzo minore di
+    public List<ProdottoEntity> findByPriceLessThan(Double prezzo) {
         return prodottoRepository.findByPrezzoLessThan(prezzo);
     }
 
