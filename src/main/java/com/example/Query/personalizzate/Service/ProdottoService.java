@@ -38,17 +38,22 @@ public class ProdottoService {
 
     //Update product
     public Optional<ProdottoEntity> updateProdotto(Integer id, ProdottoEntity prodottoDatiDaAggiornare) {
-        Optional<ProdottoEntity> prodottoEntityOptional = prodottoRepository.findById(id);
-        if (prodottoEntityOptional.isPresent()) {
-            prodottoEntityOptional.get().setDescrizione(prodottoDatiDaAggiornare.getDescrizione());
-            prodottoEntityOptional.get().setNome(prodottoDatiDaAggiornare.getNome());
-            prodottoEntityOptional.get().setPrezzo(prodottoDatiDaAggiornare.getPrezzo());
-            prodottoEntityOptional.get().setDataCreazione(prodottoDatiDaAggiornare.getDataCreazione());
-            prodottoEntityOptional.get().setCategoriaEnum(prodottoDatiDaAggiornare.getCategoriaEnum());
-            prodottoEntityOptional.get().setQuantitaDisponibile(prodottoDatiDaAggiornare.getQuantitaDisponibile());
-            ProdottoEntity prodottoAggiornato = prodottoRepository.save(prodottoDatiDaAggiornare);
-            return Optional.of(prodottoAggiornato);
+
+        Optional<ProdottoEntity> prodottoTrovatoDaAggiornare = prodottoRepository.findById(id);
+
+        if (prodottoTrovatoDaAggiornare.isPresent()) {
+            prodottoTrovatoDaAggiornare.get().setDescrizione(prodottoDatiDaAggiornare.getDescrizione());
+            prodottoTrovatoDaAggiornare.get().setNome(prodottoDatiDaAggiornare.getNome());
+            prodottoTrovatoDaAggiornare.get().setPrezzo(prodottoDatiDaAggiornare.getPrezzo());
+            prodottoTrovatoDaAggiornare.get().setDataCreazione(prodottoDatiDaAggiornare.getDataCreazione());
+            prodottoTrovatoDaAggiornare.get().setCategoriaEnum(prodottoDatiDaAggiornare.getCategoriaEnum());
+            prodottoTrovatoDaAggiornare.get().setQuantitaDisponibile(prodottoDatiDaAggiornare.getQuantitaDisponibile());
+
+            ProdottoEntity prodottoAggiornatoDopoLaSave = prodottoRepository.save(prodottoTrovatoDaAggiornare.get());
+
+            return Optional.of(prodottoAggiornatoDopoLaSave);
         }
+        // se non troviamo il prodotto da aggiornare torniamo optional empty
         return Optional.empty();
     }
 
