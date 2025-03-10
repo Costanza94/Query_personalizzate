@@ -28,7 +28,7 @@ public class ProdottoController {
     }
 
     @GetMapping("/trova-per/{id}")
-    public ResponseEntity<ProdottoEntity> trovaPerId(@PathVariable Integer id) {
+    public ResponseEntity<ProdottoEntity> trovaPerId(@PathVariable Long id) {
         Optional<ProdottoEntity> prodottoFindById = prodottoService.findById(id);
         if (prodottoFindById.isPresent()) {
             return ResponseEntity.ok(prodottoFindById.get());
@@ -37,7 +37,7 @@ public class ProdottoController {
     }
 
     @PutMapping("/update-prodotto/{id}")
-    public ResponseEntity<ProdottoEntity> aggiornaProdotto(@PathVariable Integer id, @RequestBody ProdottoEntity prodotto) {
+    public ResponseEntity<ProdottoEntity> aggiornaProdotto(@PathVariable Long id, @RequestBody ProdottoEntity prodotto) {
         Optional<ProdottoEntity> prodottoToUpdated = prodottoService.updateProdotto(id, prodotto);
         if (prodottoToUpdated.isPresent()) {
             return ResponseEntity.ok(prodottoToUpdated.get());
@@ -48,7 +48,7 @@ public class ProdottoController {
 
 
     @DeleteMapping("/delete-product/{id}")
-    public ResponseEntity<ProdottoEntity> cancellaPerId(@PathVariable Integer id){
+    public ResponseEntity<ProdottoEntity> cancellaPerId(@PathVariable Long id){
         prodottoService.deleteById(id);
         return ResponseEntity.ok().build();
     }

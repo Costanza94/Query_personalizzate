@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProdottoRepository extends JpaRepository<ProdottoEntity, Integer> {
+public interface ProdottoRepository extends JpaRepository<ProdottoEntity, Long> {
 
     //queste sono custom query servono per fare le query con le where
     @Query

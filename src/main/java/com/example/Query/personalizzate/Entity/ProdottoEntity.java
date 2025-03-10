@@ -12,7 +12,7 @@ public class ProdottoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "nome")
     private String nome;
@@ -39,9 +39,9 @@ public class ProdottoEntity {
     private LocalDate dataCreazione = LocalDate.now();
 
     //Il costruttore vuoto va sempre messo perchè spring lo vuole come specifica
-    private ProdottoEntity (){}
+    public ProdottoEntity(){}
 
-    public ProdottoEntity(Integer id, String nome, String descrizione, Double prezzo, CategoriaEnum categoriaEnum, Integer quantitaDisponibile) {
+    public ProdottoEntity(Long id, String nome, String descrizione, Double prezzo, CategoriaEnum categoriaEnum, Integer quantitaDisponibile) {
         this.id = id;
         this.nome = nome;
         this.descrizione = descrizione;
@@ -99,11 +99,11 @@ public class ProdottoEntity {
         this.nome = nome;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

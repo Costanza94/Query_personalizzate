@@ -27,7 +27,7 @@ public class ProdottoService {
     }
 
     //find by id
-    public Optional<ProdottoEntity> findById(Integer id) {
+    public Optional<ProdottoEntity> findById(Long id) {
         //devo recuperare l'elemento dall'id tramite il metodo del repository findbyid
         Optional<ProdottoEntity> prodottoFound = prodottoRepository.findById(id);
         if (prodottoFound.isPresent()) {
@@ -37,7 +37,7 @@ public class ProdottoService {
     }
 
     //Update product
-    public Optional<ProdottoEntity> updateProdotto(Integer id, ProdottoEntity prodottoDatiDaAggiornare) {
+    public Optional<ProdottoEntity> updateProdotto(Long id, ProdottoEntity prodottoDatiDaAggiornare) {
 
         Optional<ProdottoEntity> prodottoTrovatoDaAggiornare = prodottoRepository.findById(id);
 
@@ -58,7 +58,7 @@ public class ProdottoService {
     }
 
     //Delete by id
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         prodottoRepository.deleteById(id);
     }
 
