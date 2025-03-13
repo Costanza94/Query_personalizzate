@@ -4,7 +4,6 @@ import com.example.Query.personalizzate.Entity.ProdottoEntity;
 import com.example.Query.personalizzate.Enumerated.CategoriaEnum;
 import com.example.Query.personalizzate.Repository.ProdottoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,15 +57,15 @@ public class ProdottoService {
     }
 
     //Delete by id
-    public void deleteById(Long id) {
+    public void deleteProdotto(Long id) {
         prodottoRepository.deleteById(id);
     }
 
     //Find by category
     public List<ProdottoEntity> findByCategory(CategoriaEnum categoriaEnum) {
-        List<ProdottoEntity> prodottoEntityOptional = prodottoRepository.findByCategoriaEnum(CategoriaEnum.VESTITI);
-        return prodottoEntityOptional;
+        return prodottoRepository.findByCategoriaEnum(categoriaEnum);
     }
+
 
     //Find by name
     public List<ProdottoEntity> findByName(String nome) {

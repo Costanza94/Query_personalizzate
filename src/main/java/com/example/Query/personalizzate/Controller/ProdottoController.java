@@ -45,34 +45,31 @@ public class ProdottoController {
         return ResponseEntity.notFound().build();
     }
 
-
-
     @DeleteMapping("/delete-product/{id}")
-    public ResponseEntity<ProdottoEntity> cancellaPerId(@PathVariable Long id){
-        prodottoService.deleteById(id);
-        return ResponseEntity.ok().build();
+    public void deleteProdotto(@PathVariable Long id) {
+        prodottoService.deleteProdotto(id);
     }
 
-    @GetMapping("/find-by-category")
-    public ResponseEntity<List<ProdottoEntity>> trovaPerCategoria(@RequestParam CategoriaEnum categoriaEnum){
+    @GetMapping("/find-by-category/{categoriaEnum}")
+    public ResponseEntity<List<ProdottoEntity>> trovaPerCategoria(@PathVariable CategoriaEnum categoriaEnum) {
         List<ProdottoEntity> prodottoEntityList = prodottoService.findByCategory(categoriaEnum);
         return ResponseEntity.ok(prodottoEntityList);
     }
 
     @GetMapping("/find-by-name")
-    public ResponseEntity<List<ProdottoEntity>> trovaPerNome(@RequestParam String nome){
+    public ResponseEntity<List<ProdottoEntity>> trovaPerNome(@RequestParam String nome) {
         List<ProdottoEntity> prodottoEntityList = prodottoService.findByName(nome);
         return ResponseEntity.ok(prodottoEntityList);
     }
 
     @GetMapping("/find-by-price")
-    public ResponseEntity<List<ProdottoEntity>> trovaPerPrezzoMinore(@RequestParam Double prezzo){
+    public ResponseEntity<List<ProdottoEntity>> trovaPerPrezzoMinore(@RequestParam Double prezzo) {
         List<ProdottoEntity> entityList = prodottoService.findByPriceLessThan(prezzo);
         return ResponseEntity.ok(entityList);
     }
 
     @GetMapping("find-price-desc")
-    public ResponseEntity<List<ProdottoEntity>> trovaPerPrezzoDesc(@RequestParam Double prezzo){
+    public ResponseEntity<List<ProdottoEntity>> trovaPerPrezzoDesc(@RequestParam Double prezzo) {
         //dobbiamo richiamare il meotodo che ci ritorna la lista desiderata
         List<ProdottoEntity> listaQuery = prodottoService.findByPriceDesc(prezzo);
         //ritorniamo una respons    e entity con la lista degli elementi

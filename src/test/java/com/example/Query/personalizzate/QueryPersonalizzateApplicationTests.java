@@ -5,6 +5,7 @@ import com.example.Query.personalizzate.Entity.ProdottoEntity;
 import com.example.Query.personalizzate.Enumerated.CategoriaEnum;
 import com.example.Query.personalizzate.Service.ProdottoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collection;
+
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,7 +97,7 @@ class QueryPersonalizzateApplicationTests {
                 // al json dell'oggetto che abbiamo creato
                 .andDo(print())
                 .andExpect(status().isOk())// controlliamo che il codice status sia ok
-                .andExpect(jsonPath("$.nome").value("Test Prodotto")); // controllo opzionale
+                .andExpect(jsonPath("$.nome").value(prodotto.getNome())); // controllo opzionale
     }
 
     @Test
@@ -112,8 +113,79 @@ class QueryPersonalizzateApplicationTests {
                 // che significa che la richiesta è stata elaborata correttamente.
                 .andExpect(status().isOk());
     }
+
     @Test
-    public void testTrovaPerId() throws Exception{
+    public void testTrovaPerIdOk() throws Exception {
+        //cerca l'oggetto che abbiamo creato precedentemente e lo utilizza per simulare il comportamente del service
         when(prodottoService.findById(anyLong())).thenReturn(Optional.of(prodotto));
+        mockMvc.perform(get("/prodotto/trova-per/" + prodotto.getId())
+                        .contentType(MediaType.APPLICATION_JSON) //Imposta il tipo di contenuto della richiesta come JSON.
+                        .content(objectMapper.writeValueAsString(prodotto)))//Converte l'oggetto prodotto in una stringa JSON
+                //simula la chiamata di postman
+                .andDo(print()) //stampa il risultato della risposta http
+                .andExpect(status().isOk()) //Qui si verifica che la risposta alla richiesta HTTP abbia uno stato "OK"
+                .andExpect(jsonPath("$.nome").value(prodotto.getNome()));//
+    }
+
+    @Test
+    public void testTrovaPerIdNotFound() throws Exception {
+
+        when(prodottoService.findById(anyLong())).thenReturn(Optional.empty());
+        mockMvc.perform(get("/prodotto/trova-per/" + prodotto.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(prodottoNotFound)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+        //Non abbiamo bisogno del JsonPath in quanto l'oggetto non viene trovato e non ci serve.
+    }
+
+    @Test
+    public void testUpdateProdotto() throws Exception {
+        when(prodottoService.updateProdotto(anyLong(), any(ProdottoEntity.class))).thenReturn(Optional.of(prodotto));
+        mockMvc.perform(put("/prodotto/update-prodotto/" + prodotto.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(prodotto)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nome").value(prodotto.getNome()));
+        //Nel contesto del test, questa riga verifica che la risposta del server (la risposta JSON)
+        // contenga il campo nome con il valore corretto.
+        // Se la risposta del server non contiene il valore giusto, il test fallirà.
+    }
+
+    @Test
+    public void testUpdateProdottoNotFound() throws Exception {
+
+        when(prodottoService.updateProdotto(anyLong(), any(ProdottoEntity.class))).thenReturn(Optional.empty());
+
+        mockMvc.perform(put("/prodotto/update-prodotto/" + prodottoNotFound.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(prodottoNotFound)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testDeleteProdottoById() throws Exception {
+
+        doNothing().when(prodottoService).deleteProdotto(prodotto.getId());
+
+        mockMvc.perform(delete("/prodotto/delete-product/" + prodotto.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(prodotto)))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testFindByCategory() throws Exception {
+
+        CategoriaEnum categoriaEnum = CategoriaEnum.ELETTRONICA;
+
+        when(prodottoService.findByCategory(categoriaEnum)).thenReturn(Collections.singletonList(prodotto));
+        mockMvc.perform(get("/prodotto/find-by-category/ELETTRONICA"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].categoriaEnum").value(Matchers.equalToIgnoringCase(categoriaEnum.name())));
     }
 }
